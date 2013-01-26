@@ -75,11 +75,13 @@ pub fn was_init(flags: &[InitFlag]) -> ~[InitFlag] {
     move vecflags
 }
 
-pub fn get_error() -> ~str unsafe {
-    let cstr = ll::error::SDL_GetError();
-    // FIXME: Converting sbuf to *c_char
-    let cstr = cast::reinterpret_cast(&cstr);
-    str::raw::from_c_str(cstr)
+pub fn get_error() -> ~str {
+    unsafe {
+        let cstr = ll::error::SDL_GetError();
+        // FIXME: Converting sbuf to *c_char
+        let cstr = cast::reinterpret_cast(&cstr);
+        str::raw::from_c_str(cstr)
+    }
 }
 
 pub fn set_error(s: &str) {

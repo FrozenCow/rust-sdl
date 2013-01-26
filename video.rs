@@ -114,19 +114,21 @@ pub fn set_video_mode(
     }
 }
 
-pub fn load_bmp(file: &str) -> Result<~Surface, ~str> unsafe {
-    str::as_buf(file, |buf, _len| {
-        let buf = cast::reinterpret_cast(&buf);
-        str::as_buf(~"rb", |rbbuf, _len| {
-            let rbbuf = cast::reinterpret_cast(&rbbuf);
-            let raw_surface = ll::video::SDL_LoadBMP_RW(ll::video::SDL_RWFromFile(buf, rbbuf), 1 as c_int);
-            if raw_surface == ptr::null() {
-                Err(sdl::get_error())
-            } else {
-                Ok(~Surface{ raw_surface: raw_surface })
-            }
+pub fn load_bmp(file: &str) -> Result<~Surface, ~str> {
+    unsafe {
+        str::as_buf(file, |buf, _len| {
+            let buf = cast::reinterpret_cast(&buf);
+            str::as_buf(~"rb", |rbbuf, _len| {
+                let rbbuf = cast::reinterpret_cast(&rbbuf);
+                let raw_surface = ll::video::SDL_LoadBMP_RW(ll::video::SDL_RWFromFile(buf, rbbuf), 1 as c_int);
+                if raw_surface == ptr::null() {
+                    Err(sdl::get_error())
+                } else {
+                    Ok(~Surface{ raw_surface: raw_surface })
+                }
+            })
         })
-    })
+    }
 }
 
 pub fn create_rgb_surface(
